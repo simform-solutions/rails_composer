@@ -373,7 +373,8 @@ when "5"
   case prefs[:apps4]
     when 'railsapps'
         prefs[:apps4] = multiple_choice "Choose a starter application.",
-        [["learn-rails", "learn-rails"],
+        [["rails-gallary-demo", "rails-gallary"],
+        ["learn-rails", "learn-rails"],
         ["rails-bootstrap", "rails-bootstrap"],
         ["rails-foundation", "rails-foundation"],
         ["rails-mailinglist-activejob", "rails-mailinglist-activejob"],
@@ -394,7 +395,6 @@ when "4"
   else
     prefs[:apps4] = multiple_choice "Build a starter application?",
       [["Build a RailsApps example application", "railsapps"],
-      ["Contributed applications (none available)", "contributed_app"],
       ["Custom application (experimental)", "none"]] unless prefs.has_key? :apps4
     case prefs[:apps4]
       when 'railsapps'
@@ -442,6 +442,161 @@ unless prefs[:announcements]
 end
 # >-------------------------- recipes/railsapps.rb ---------------------------end<
 # >-------------------------- templates/recipe.erb ---------------------------end<
+
+
+# >-------------------------- templates/recipe.erb ---------------------------start<
+# >------------------------------[ rails-gallary ]------------------------------<
+@current_recipe = "rails-gallary"
+@before_configs["rails-gallary"].call if @before_configs["rails-gallary"]
+say_recipe 'rails-gallary'
+@configs[@current_recipe] = config
+# >------------------------- recipes/learn_rails.rb --------------------------start<
+
+# Application template recipe for the rails_apps_composer. Change the recipe here:
+# https://github.com/RailsApps/rails_apps_composer/blob/master/recipes/learn_rails.rb
+
+if prefer :apps4, 'rails-gallary'
+
+  # preferences
+  prefs[:authentication] = false
+  prefs[:authorization] = false
+  prefs[:dashboard] = 'none'
+  prefs[:ban_spiders] = false
+  prefs[:better_errors] = true
+  prefs[:database] = 'sqlite'
+  prefs[:deployment] = 'heroku'
+  prefs[:devise_modules] = false
+  prefs[:dev_webserver] = 'puma'
+  prefs[:email] = 'mailgun-ruby'
+  prefs[:frontend] = 'bootstrap'
+  prefs[:layouts] = 'none'
+  prefs[:pages] = 'none'
+  prefs[:github] = false
+  prefs[:git] = true
+  prefs[:local_env_file] = 'none'
+  prefs[:prod_webserver] = 'same'
+  prefs[:pry] = false
+  prefs[:secrets] = ['owner_email', 'mailchimp_list_id', 'mailchimp_api_key']
+  prefs[:templates] = 'erb'
+  prefs[:tests] = false
+  prefs[:locale] = 'none'
+  prefs[:analytics] = 'none'
+  prefs[:rubocop] = false
+  prefs[:disable_turbolinks] = false
+  prefs[:admin] = "no"
+  prefs[:grape_swagger] = "no"
+  prefs[:form_builder] = false
+  prefs[:jquery] = 'gem'
+  #make it true
+  prefs[:rvmrc] = false
+  
+  # gems
+  add_gem 'bootstrap'
+  add_gem 'jquery-rails'
+  add_gem 'paperclip', git: 'git://github.com/thoughtbot/paperclip.git'
+  add_gem 'activeadmin'
+  add_gem 'devise'
+  add_gem 'active_admin_theme'
+  add_gem 'cancancan'
+  add_gem 'rolify'
+  add_gem 'toastr-rails'
+  add_gem 'devise_token_authenticatable'
+  add_gem 'simple_token_authentication'
+  add_gem 'grape'
+  add_gem 'grape-swagger'
+  add_gem 'grape-swagger-rails'
+  add_gem 'grape-swagger-entity', '~> 0.1.3'
+  add_gem 'grape-swagger-representable', '~> 0.1.3'
+  add_gem 'mailgun-ruby'
+
+  gsub_file 'Gemfile', /gem 'sqlite3'\n/, ''
+  add_gem 'sqlite3', :group => :development
+
+  stage_two do
+    say_wizard "recipe stage two"
+    generate 'model Category name:string'
+    generate 'model Photo category:references'
+    generate 'paperclip Photo attachment'
+  end
+
+  stage_three do
+    say_wizard "recipe stage three"
+    repo = 'https://raw.github.com/simformsolutions/rails_gallary_demo/master/'
+
+    # >-----------------------------[ Devise]----------------------------------<
+    generate 'devise:install'
+    generate 'devise user' # create the User model
+    generate 'cancan:ability'
+    generate 'rolify Role User'
+    generate 'migration add_authentication_token_to_users "authentication_token:string{30}:uniq"'
+
+    # >-----------------------------[ Active admin]----------------------------------<
+    generate 'active_admin:install'
+
+    # >-------------------------------[ Models ]--------------------------------<
+    copy_from_repo 'app/models/category.rb', :repo => repo
+    copy_from_repo 'app/models/photo.rb', :repo => repo
+    copy_from_repo 'app/models/ability.rb', :repo => repo
+    copy_from_repo 'app/models/admin_user.rb', :repo => repo
+    copy_from_repo 'app/models/role.rb', :repo => repo
+    copy_from_repo 'app/models/user.rb', :repo => repo
+
+    # >-------------------------------[ Controllers ]--------------------------------<
+    copy_from_repo 'app/controllers/application_controller.rb', :repo => repo
+    copy_from_repo 'app/controllers/categories_controller.rb', :repo => repo
+    copy_from_repo 'app/controllers/photos_controller.rb', :repo => repo
+
+    # >-------------------------------[ API ]--------------------------------<
+    copy_from_repo 'app/api/api.rb', :repo => repo
+    copy_from_repo 'app/api/entities/users_entity.rb', :repo => repo
+    copy_from_repo 'app/api/endpoints/categories.rb', :repo => repo
+    copy_from_repo 'app/api/endpoints/photos.rb', :repo => repo
+    copy_from_repo 'app/api/endpoints/users.rb', :repo => repo
+
+
+    # >-------------------------------[ Admin Panel ]--------------------------------<
+    copy_from_repo 'app/admin/admin_users.rb', :repo => repo
+    copy_from_repo 'app/admin/categories.rb', :repo => repo
+    copy_from_repo 'app/admin/dashboard.rb', :repo => repo
+    copy_from_repo 'app/admin/photos.rb', :repo => repo
+    copy_from_repo 'app/admin/roles.rb', :repo => repo
+    copy_from_repo 'app/admin/users.rb', :repo => repo
+
+    # >-------------------------------[ Views ]--------------------------------<
+    copy_from_repo 'app/views/categories/index.html.erb', :repo => repo
+    copy_from_repo 'app/views/categories/show.html.erb', :repo => repo
+    copy_from_repo 'app/views/layouts/application.html.erb', :repo => repo
+  
+    # >-------------------------------[ Routes ]--------------------------------<
+    copy_from_repo 'config/routes.rb', :repo => repo
+
+    # >-------------------------------[ Assets ]--------------------------------<
+    copy_from_repo 'app/assets/javascripts/application.js', :repo => repo
+    copy_from_repo 'app/assets/stylesheets/active_admin.scss', :repo => repo
+    copy_from_repo 'app/assets/stylesheets/application.scss', :repo => repo
+    remove_file 'app/assets/stylesheets/application.css'
+
+    # >-------------------------------[ Config ]--------------------------------<
+    copy_from_repo 'config/environments/development.rb', :repo => repo
+
+    # >-------------------------------[ Initializers ]--------------------------------<
+    copy_from_repo 'config/initializers/active_admin.rb', :repo => repo
+    copy_from_repo 'config/initializers/devise.rb', :repo => repo
+    copy_from_repo 'config/initializers/swagger.rb', :repo => repo
+
+    # >-------------------------------[ Seed ]--------------------------------<
+    copy_from_repo 'db/seeds.rb', :repo => repo
+    
+    run 'bundle exec rake db:create'
+    run 'bundle exec rake db:migrate'
+    run 'bundle exec rake db:seed'
+  end
+end
+# >------------------------- recipes/learn_rails.rb --------------------------end<
+# >-------------------------- templates/recipe.erb ---------------------------end<
+
+
+
 
 # >-------------------------- templates/recipe.erb ---------------------------start<
 # >------------------------------[ learn_rails ]------------------------------<

@@ -24,6 +24,7 @@ All the code is explained in the Capstone Rails Tutorials. You can purchase the 
 h2. Starter Apps and Tutorials
 
 |_. Example |_. Tutorial |_. Comments |
+| "rails-gallary-demo":https://github.com/simformsolutions/rails_gallary_demo/tree/master | "Rails-gallary-demo":https://github.com/simformsolutions/rails_gallary_demo/tree/master | Authentication, Admin panel, API's demo |
 | "learn-rails":https://github.com/RailsApps/learn-rails | "Learn Ruby on Rails":http://learn-rails.com/learn-ruby-on-rails.html | from the book for beginners |
 | "rails-bootstrap":https://github.com/RailsApps/rails-bootstrap | "Rails and Bootstrap":http://railsapps.github.io/twitter-bootstrap-rails.html | Bootstrap front-end framework |
 | "rails-foundation":https://github.com/RailsApps/rails-foundation | "Rails and Foundation":http://railsapps.github.io/rails-foundation.html | Foundation front-end framework |
@@ -62,7 +63,7 @@ h2. How To Use Rails Composer
 To build a Rails application using the Rails Composer tool:
 
 <pre>
-$ rails new myapp -m https://raw.github.com/RailsApps/rails-composer/master/composer.rb
+$ rails new myapp -m https://raw.github.com/simformsolutions/rails_composer/master/composer.rb
 </pre>
 
 Replace @myapp@ with the name of your application.
@@ -82,7 +83,7 @@ $ mkdir myapp
 $ cd myapp
 $ rvm use ruby-2.4.0@myapp --ruby-version --create
 $ gem install rails
-$ rails new . -m https://raw.github.com/RailsApps/rails-composer/master/composer.rb
+$ rails new . -m https://raw.github.com/simformsolutions/rails_composer/master/composer.rb
 </pre>
 
 Instead of installing Rails into the global gemset and running @rails new@, we'll create a root directory for a new application, create a new gemset, install Rails, and then generate a starter application.
@@ -107,24 +108,24 @@ You'll see a prompt:
 option  Build a starter application?
     1)  Build a RailsApps example application
     2)  Contributed applications
-    3)  Custom application
 </pre>
 
 Enter "1" to select *Build a starter application*. You'll see a prompt:
 
 <pre>
 option  Choose a starter application.
-    1)  learn-rails
-    2)  rails-bootstrap
-    3)  rails-foundation
-    4)  rails-mailinglist-activejob
-    5)  rails-omniauth
-    6)  rails-devise
-    7)  rails-devise-roles
-    8)  rails-devise-pundit
-    9)  rails-signup-download
-   10)  rails-stripe-checkout
-   11)  rails-stripe-coupons
+    1)  rails-gallary-demo
+    2)  learn-rails
+    3)  rails-bootstrap
+    4)  rails-foundation
+    5)  rails-mailinglist-activejob
+    6)  rails-omniauth
+    7)  rails-devise
+    8)  rails-devise-roles
+    9)  rails-devise-pundit
+   10)  rails-signup-download
+   11)  rails-stripe-checkout
+   12)  rails-stripe-coupons
 </pre>
 
 Each of these applications is available as an example in the "RailsApps GitHub repo":https://github.com/RailsApps and each is accompanied by a tutorial on the "Capstone Rails Tutorials":https://tutorials.railsapps.org/ site.
@@ -205,10 +206,6 @@ If you choose to create a GitHub repository, the generator will prompt you for a
 
 It is a good idea to use "RVM":https://rvm.io/, the Ruby Version Manager, and create a project-specific rvm gemset (not available on Windows). See "Installing Rails":http://railsapps.github.io/installing-rails.html.
 
-h2. Contributed Applications
-
-Currently, there are no contributed applications available. If you would like to add your favorite starter application to Rails Composer, open an issue to let us know.
-
 h2. Build Your Own Application
 
 If you choose "Custom application," you will get a wide set of choices. Not all are actively supported.
@@ -220,8 +217,7 @@ When you choose "Custom application," you will see something similar to this:
 <pre>
 option  Build a starter application?
       1)  Build a RailsApps example application
-      2)  Contributed applications
-      3)  Custom application
+      2)  Custom application
 
 option  Web server for development?
       1)  WEBrick (default)
