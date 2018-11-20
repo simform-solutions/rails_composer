@@ -589,7 +589,7 @@ if prefer :apps4, 'rails-gallary'
     
     run 'bundle exec rake db:create'
     run 'bundle exec rake db:migrate'
-    run 'bundle exec rake db:seed'
+    # run 'bundle exec rake db:seed'
   end
 end
 # >------------------------- recipes/learn_rails.rb --------------------------end<
