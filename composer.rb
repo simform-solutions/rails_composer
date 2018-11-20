@@ -2576,7 +2576,9 @@ stage_three do
       secrets_email = foreman_email = ''
     when 'smtp'
       secrets_email = foreman_email = ''
-    when 'gmail'
+    when 'mailgun-ruby'
+      secrets_email = foreman_email = ''
+    when 'none'
       secrets_email = "  email_provider_username: <%= ENV[\"GMAIL_USERNAME\"] %>\n  email_provider_password: <%= ENV[\"GMAIL_PASSWORD\"] %>"
       foreman_email = "GMAIL_USERNAME=Your_Username\nGMAIL_PASSWORD=Your_Password\nDOMAIN_NAME=example.com\n"
     when 'sendgrid'
